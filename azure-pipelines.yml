@@ -10,8 +10,6 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-# Java tool installer v0
-# Acquire a specific version of Java from a user-supplied Azure blob or the tool cache and sets JAVA_HOME.
 - task: JavaToolInstaller@0
   inputs:
     versionSpec: '24'

@@ -1,8 +1,3 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - main
 
@@ -14,12 +9,11 @@ variables:
   SONARQUBE_ORG: 'ltheobald'
 
 steps:
-  - task: SonarQubePrepare@5
+  - task: SonarQubePrepare@3
     inputs:
       SonarQube: 'SonarQubeCloud'
       scannerMode: 'Other'
       configMode: 'manual'
-      cliProjectKey: '$(SONARQUBE_PROJECT_KEY)'
 
   - task: JavaToolInstaller@0
     inputs:
@@ -38,8 +32,8 @@ steps:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean verify sonar:sonar package'
 
-  - task: SonarQubeAnalyze@5
+  - task: SonarCloudAnalyze@3
 
-  - task: SonarQubePublish@5
+  - task: SonarQubePublish@3
     inputs:
       pollingTimeoutSec: '300'

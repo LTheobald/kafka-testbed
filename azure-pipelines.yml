@@ -23,6 +23,8 @@ steps:
     displayName: 'Maven Build'
     inputs:
       mavenPomFile: 'pom.xml'
+      options: >
+        -DnvdApiKey=4a0670ba-15a8-47c7-a327-a3e9d54df86b
       mavenOptions: '-Xmx3072m'
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: '1.21'

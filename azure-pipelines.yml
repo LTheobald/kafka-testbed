@@ -24,7 +24,7 @@ steps:
     inputs:
       mavenPomFile: 'pom.xml'
       options: >
-        -DnvdApiKey=4a0670ba-15a8-47c7-a327-a3e9d54df86b
+        -DnvdApiKey=$(NVD_API_KEY)
         -Dsonar.projectKey=LTheobald_kafka-testbed
       mavenOptions: '-Xmx3072m'
       javaHomeOption: 'JDKVersion'

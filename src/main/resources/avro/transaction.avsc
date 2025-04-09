@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Transaction",
+  "fields": [
+    { "name": "paymentId", "type": "string" },
+    { "name": "amount", "type": "double" },
+    { "name": "currency", "type": "string" },
+    { "name": "statementNarrative", "type": "string" }
+  ]
+}

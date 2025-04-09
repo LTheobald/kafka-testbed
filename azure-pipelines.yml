@@ -4,10 +4,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  SONARQUBE_PROJECT_KEY: 'kafka-testbed'
-  SONARQUBE_ORG: 'ltheobald'
-
 steps:
   - task: SonarCloudPrepare@3
     displayName: 'SonarQube: Prepare'

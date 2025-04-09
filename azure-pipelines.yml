@@ -13,8 +13,8 @@ steps:
     displayName: 'SonarQube: Prepare'
     inputs:
       SonarQube: 'SonarQubeCloud'
+      organization: 'ltheobald'
       scannerMode: 'Other'
-      configMode: 'manual'
 
   - task: JavaToolInstaller@0
     displayName: 'Install Java 21'

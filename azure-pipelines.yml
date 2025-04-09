@@ -9,19 +9,37 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  SONARQUBE_PROJECT_KEY: 'kafka-testbed'
+  SONARQUBE_ORG: 'ltheobald'
+
 steps:
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '21'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.21'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+  - task: SonarQubePrepare@5
+    inputs:
+      SonarQube: 'SonarQubeCloud'
+      scannerMode: 'Other'
+      configMode: 'manual'
+      cliProjectKey: '$(SONARQUBE_PROJECT_KEY)'
+
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '21'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  - task: Maven@4
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.21'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'clean verify sonar:sonar package'
+
+  - task: SonarQubeAnalyze@5
+
+  - task: SonarQubePublish@5
+    inputs:
+      pollingTimeoutSec: '300'

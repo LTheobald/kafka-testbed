@@ -10,18 +10,21 @@ variables:
 
 steps:
   - task: SonarCloudPrepare@3
+    displayName: 'SonarQube: Prepare'
     inputs:
       SonarQube: 'SonarQubeCloud'
       scannerMode: 'Other'
       configMode: 'manual'
 
   - task: JavaToolInstaller@0
+    displayName: 'Install Java 21'
     inputs:
       versionSpec: '21'
       jdkArchitectureOption: 'x64'
       jdkSourceOption: 'PreInstalled'
 
   - task: Maven@4
+    displayName: 'Maven Build'
     inputs:
       mavenPomFile: 'pom.xml'
       mavenOptions: '-Xmx3072m'
@@ -33,7 +36,9 @@ steps:
       goals: 'clean verify sonar:sonar package'
 
   - task: SonarCloudAnalyze@3
+    displayName: 'SonarQube: Analyze'
 
   - task: SonarCloudPublish@3
+    displayName: 'SonarQube: Publish'
     inputs:
       pollingTimeoutSec: '300'

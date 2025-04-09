@@ -12,8 +12,8 @@ steps:
   - task: SonarCloudPrepare@3
     inputs:
       SonarQube: 'SonarQubeCloud'
+      organization: 'ltheobald'
       scannerMode: 'Other'
-      configMode: 'manual'
 
   - task: JavaToolInstaller@0
     inputs:

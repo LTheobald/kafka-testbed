@@ -4,6 +4,9 @@
 # Target Dir
 /target
 
+# IntelliJ
+.idea/
+
 # Log file
 *.log
 

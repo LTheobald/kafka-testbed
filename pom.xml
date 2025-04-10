@@ -55,6 +55,11 @@
 			<artifactId>avro</artifactId>
 			<version>1.12.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.wso2.orbit.io.confluent</groupId>
+			<artifactId>kafka-avro-serializer</artifactId>
+			<version>7.6.0.wso2v2</version>
+		</dependency>
 
 		<!-- Testing -->
 		<dependency>
@@ -110,7 +115,7 @@
 						</goals>
 						<configuration>
 							<sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
-							<outputDirectory>${project.build.directory}/generated/avro</outputDirectory>
+							<outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>

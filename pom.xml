@@ -61,6 +61,14 @@
 			<version>7.6.0.wso2v2</version>
 		</dependency>
 
+		<!-- Docker to aid local dev -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-docker-compose</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

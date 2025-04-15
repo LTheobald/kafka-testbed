@@ -5,7 +5,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  mavenCacheFolder: $(Pipeline.Workspace)/.m2/repository
+  mavenRootFolder: $(Pipeline.Workspace)/.m2/
+  mavenCacheFolder: $(mavenRootFolder}repository
 
 steps:
   - task: SonarCloudPrepare@3
@@ -25,7 +26,7 @@ steps:
   # Set up Maven to use the custom cache path
   - script: |
       mkdir -p ~/.m2
-      echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > ~/.m2/settings.xml
+      echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > $(mavenRootFolder}settings.xml
     displayName: 'Prepare Maven local repo'
 
   # Cache Maven dependencies
@@ -42,7 +43,7 @@ steps:
       options: >
         -DnvdApiKey=$(NVD_API_KEY)
         -Dsonar.projectKey=LTheobald_kafka-testbed
-        --settings ~/.m2/settings.xml
+        --settings $(mavenRootFolder}settings.xml
       mavenOptions: '-Xmx3072m'
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: '1.21'

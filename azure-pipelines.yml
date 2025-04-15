@@ -5,6 +5,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  nvdAPIKey: "78b5081b-b36d-4988-b159-acbfa0dcbf38"
   mavenRootFolder: $(Pipeline.Workspace)/.m2/
   mavenCacheFolder: $(mavenRootFolder)repository
 
@@ -41,7 +42,7 @@ steps:
     inputs:
       mavenPomFile: 'pom.xml'
       options: >
-        -DnvdApiKey=$(NVD_API_KEY)
+        -DnvdApiKey=$(nvdAPIKey)
         -Dsonar.projectKey=LTheobald_kafka-testbed
         --settings $(mavenRootFolder)settings.xml
       mavenOptions: '-Xmx3072m'

@@ -25,7 +25,7 @@ steps:
 
   # Set up Maven to use the custom cache path
   - script: |
-      mkdir -p ~/.m2
+      mkdir -p $(mavenRootFolder)
       echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > $(mavenRootFolder)settings.xml
     displayName: 'Prepare Maven local repo'
 

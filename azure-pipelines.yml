@@ -27,6 +27,12 @@ stages:
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled'
 
+          # Set up Maven to use the custom cache path
+          - script: |
+              mkdir -p ~/.m2
+              echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > ~/.m2/settings.xml
+            displayName: 'Prepare Maven local repo'
+
           # Cache Maven dependencies
           - task: Cache@2
             inputs:
@@ -35,11 +41,6 @@ stages:
                 maven | "$(Agent.OS)"
               path: $(mavenCacheFolder)
 
-          # Set up Maven to use the custom cache path
-          - script: |
-              mkdir -p ~/.m2
-              echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > ~/.m2/settings.xml
-            displayName: 'Configure Maven local repository path'
   - stage: Build
     displayName: "Build"
     jobs:

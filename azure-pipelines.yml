@@ -1,43 +1,70 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - task: SonarCloudPrepare@3
-    displayName: 'SonarQube: Prepare'
-    inputs:
-      SonarQube: 'SonarQubeCloud'
-      organization: 'ltheobald'
-      scannerMode: 'Other'
+variables:
+  mavenCacheFolder: $(Pipeline.Workspace)/.m2/repository
 
-  - task: JavaToolInstaller@0
-    displayName: 'Install Java 21'
-    inputs:
-      versionSpec: '21'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
+stages:
+  - stage: Prepare
+    displayName: "Prepare"
+    jobs:
+      - job: PrepareJob
+        steps:
+          - task: SonarCloudPrepare@3
+            displayName: 'SonarQube: Prepare'
+            inputs:
+              SonarQube: 'SonarQubeCloud'
+              organization: 'ltheobald'
+              scannerMode: 'Other'
 
-  - task: Maven@4
-    displayName: 'Maven Build'
-    inputs:
-      mavenPomFile: 'pom.xml'
-      options: >
-        -DnvdApiKey=$(NVD_API_KEY)
-        -Dsonar.projectKey=LTheobald_kafka-testbed
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.21'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'clean verify sonar:sonar package'
+          - task: JavaToolInstaller@0
+            displayName: 'Install Java 21'
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
 
-  - task: SonarCloudAnalyze@3
-    displayName: 'SonarQube: Analyze'
+          # Cache Maven dependencies
+          - task: Cache@2
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: |
+                maven | "$(Agent.OS)"
+              path: $(mavenCacheFolder)
 
-  - task: SonarCloudPublish@3
-    displayName: 'SonarQube: Publish'
-    inputs:
-      pollingTimeoutSec: '300'
+          # Set up Maven to use the custom cache path
+          - script: |
+              mkdir -p ~/.m2
+              echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > ~/.m2/settings.xml
+            displayName: 'Configure Maven local repository path'
+  - stage: Build
+    displayName: "Build"
+    jobs:
+      - job: BuildJob
+        steps:
+          - task: Maven@4
+            displayName: 'Maven Build'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              options: >
+                -DnvdApiKey=$(NVD_API_KEY)
+                -Dsonar.projectKey=LTheobald_kafka-testbed
+                --settings ~/.m2/settings.xml
+              mavenOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.21'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              goals: 'clean verify sonar:sonar package'
+
+          - task: SonarCloudAnalyze@3
+            displayName: 'SonarQube: Analyze'
+
+          - task: SonarCloudPublish@3
+            displayName: 'SonarQube: Publish'
+            inputs:
+              pollingTimeoutSec: '300'

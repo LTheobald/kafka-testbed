@@ -18,7 +18,6 @@ class AuthSwitch {
     private static Logger LOGGER = LoggerFactory.getLogger(AuthSwitch.class);
     public static final String TOPIC = "authorisations";
 
-
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private static final double MIN_AMOUNT = 0.01;

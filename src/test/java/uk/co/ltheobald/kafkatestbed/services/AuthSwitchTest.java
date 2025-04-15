@@ -23,6 +23,6 @@ class AuthSwitchTest {
 
     @Test
     void createAuthorisation() {
-        assert true;
+        authSwitch.createAuthorisations();
     }
 }

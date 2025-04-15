@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: localhost:29092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
@@ -12,3 +12,4 @@ spring:
       group-id: my-group
       properties:
         schema.registry.url: http://localhost:8085
+        specific.avro.reader: true

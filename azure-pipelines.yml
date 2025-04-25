@@ -15,23 +15,9 @@ variables:
   sonarqubeProjectName: 'Kafka Testbed'
 
 stages:
-  # Stage 0: Ensure the agent has what it needs
-  - stage: PrepareAgent
-    displayName: 'Prepare agent'
-    jobs:
-      - job: PrepareAgent
-        steps:
-          - task: JavaToolInstaller@0
-            displayName: 'Install Java 21'
-            inputs:
-              versionSpec: '21'
-              jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
-
   # Stage 1: Build & test
   - stage: BuildTest
     displayName: 'Build and Unit Test'
-    dependsOn: PrepareAgent
     jobs:
       - job: Build
         steps:

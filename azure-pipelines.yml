@@ -8,52 +8,112 @@ variables:
   nvdAPIKey: "78b5081b-b36d-4988-b159-acbfa0dcbf38"
   mavenRootFolder: $(Pipeline.Workspace)/.m2/
   mavenCacheFolder: $(mavenRootFolder)repository
+  dockerImageName: 'kafka-testbed'
+  sonarqubeService: 'SonarQubeCloud'
+  sonarqubeOrg: 'ltheobald'
+  sonarqubeProjectKey: 'kafka-testbed'
+  sonarqubeProjectName: 'Kafka Testbed'
 
-steps:
-  - task: SonarCloudPrepare@3
-    displayName: 'SonarQube: Prepare'
-    inputs:
-      SonarQube: 'SonarQubeCloud'
-      organization: 'ltheobald'
-      scannerMode: 'Other'
+stages:
+  # Stage 0: Ensure the agent has what it needs
+  - stage: PrepareAgent
+    displayName: 'Prepare agent'
+    jobs:
+      - job: PrepareAgent
+        steps:
+          - task: JavaToolInstaller@0
+            displayName: 'Install Java 21'
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
 
-  - task: JavaToolInstaller@0
-    displayName: 'Install Java 21'
-    inputs:
-      versionSpec: '21'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
+  # Stage 1: Build & test
+  - stage: BuildTest
+    displayName: 'Build and Unit Test'
+    jobs:
+      - job: Build
+        steps:
+          - task: Cache@2
+            displayName: 'Cache Maven dependencies'
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: 'maven | "$(Agent.OS)"'
+              path: $(mavenCacheFolder)
 
-  # Set up Maven to use the custom cache path
-  - script: |
-      mkdir -p $(mavenRootFolder)
-      echo "<settings><localRepository>$(mavenCacheFolder)</localRepository></settings>" > $(mavenRootFolder)settings.xml
-    displayName: 'Prepare Maven local repo'
+          - task: Maven@3
+            displayName: 'Build & Unit Test'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'clean install'
+              options: '-Dmaven.repo.local=$(mavenCacheFolder)'
+              publishJUnitResults: true
 
-  # Cache Maven dependencies
-  - task: Cache@2
-    inputs:
-      key: 'maven | "$(Agent.OS)" | **/pom.xml'
-      restoreKeys: |
-        maven | "$(Agent.OS)"
-      path: $(mavenCacheFolder)
-  - task: Maven@4
-    displayName: 'Maven Build'
-    inputs:
-      mavenPomFile: 'pom.xml'
-      options: >
-        -DnvdApiKey=$(nvdAPIKey)
-        -Dsonar.projectKey=LTheobald_kafka-testbed
-        --settings $(mavenRootFolder)settings.xml
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.21'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'clean verify sonar:sonar package'
+  # Stage 2: Code Analysis
+  - stage: CodeAnalysis
+    displayName: 'Static Code Analysis'
+    dependsOn: BuildTest
+    jobs:
+      - job: SonarQubeAnalysis
+        steps:
+          - task: SonarCloudPrepare@3
+            displayName: 'SonarQube: Prepare'
+            inputs:
+              SonarQube: '$(sonarqubeService)'
+              organization: '$(sonarqubeOrg)'
+              scannerMode: 'Other'
 
-  - task: SonarCloudPublish@3
-    displayName: 'SonarQube: Publish'
-    inputs:
-      pollingTimeoutSec: '300'
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'verify'
+              options: >
+                -DnvdApiKey=$(nvdAPIKey)
+                -Dsonar.projectKey=$(sonarqubeProjectKey)
+                -Dmaven.repo.local=$(mavenCacheFolder)
+            displayName: 'Verify with Maven'
+
+          - task: SonarCloudPublish@3
+            displayName: 'SonarQube: Publish'
+            inputs:
+              pollingTimeoutSec: 300
+
+  # Stage 3: Docker Build & Scan
+  - stage: Containerize
+    displayName: 'Container Build and Scan'
+    dependsOn: CodeAnalysis
+    jobs:
+      - job: Docker
+        steps:
+          - task: Maven@3
+            displayName: 'Build OCI Image with Buildpacks'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'spring-boot:build-image'
+              options: >
+                -Dspring-boot.build-image.imageName=$(dockerImageName):$(Build.BuildId)
+                -Dmaven.repo.local=$(mavenCacheFolder)
+
+          - task: Trivy@1
+            inputs:
+              imageName: "$(dockerImageName):$(Build.BuildId)"
+            displayName: 'Scan image for Vulnerabilities'
+            condition: succeededOrFailed()
+
+  # Stage 4: Push to Container Registry
+#  - stage: PushImage
+#    displayName: 'Push Docker Image to ACR'
+#    dependsOn: Containerize
+#    condition: succeeded()
+#    jobs:
+#      - job: Push
+#        steps:
+#          - task: Docker@2
+#            displayName: 'Push Docker Image'
+#            inputs:
+#              containerRegistry: '$(ACR_NAME)'
+#              repository: '$(DOCKER_IMAGE_NAME)'
+#              command: 'push'
+#              tags: |
+#                $(Build.BuildId)
+#                latest

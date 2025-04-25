@@ -27,20 +27,20 @@ public class Authorisations {
   }
 
   @KafkaListener(topics = "authorisations", groupId = "authorisations")
-  public void incomingAuths(ConsumerRecord<String, Transaction> record) {
-    this.pending.put(record.value().getTransactionId(), record.value());
+  public void incomingAuths(ConsumerRecord<String, Transaction> transactionRecord) {
+    this.pending.put(transactionRecord.value().getTransactionId(), transactionRecord.value());
   }
 
   @KafkaListener(topics = "fraud", groupId = "authorisations")
-  public void listen(ConsumerRecord<String, FraudResult> record) {
-    Transaction tx = pending.remove(record.value().getTransactionId());
+  public void listen(ConsumerRecord<String, FraudResult> fraudResultRecord) {
+    Transaction tx = pending.remove(fraudResultRecord.value().getTransactionId());
 
     if (tx == null) {
-      LOGGER.warn("Transaction {} not found in pending list", record.value().getTransactionId());
+      LOGGER.warn("Transaction {} not found in pending list", fraudResultRecord.value().getTransactionId());
       return;
     }
 
-    if (record.value().getFraudDetected()) {
+    if (fraudResultRecord.value().getFraudDetected()) {
       LOGGER.info("Transaction declined!");
       return;
     }

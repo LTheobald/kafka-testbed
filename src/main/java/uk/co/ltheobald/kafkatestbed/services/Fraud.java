@@ -26,20 +26,20 @@ public class Fraud {
   }
 
   @KafkaListener(topics = "authorisations", groupId = "fraud-auth-listeners")
-  public void listen(ConsumerRecord<String, Transaction> record) {
+  public void listen(ConsumerRecord<String, Transaction> transactionRecord) {
     FraudResult fraudResult =
         FraudResult.newBuilder()
             .setTimestamp(Instant.now())
             .setFraudDetected(false)
-            .setTransactionId(record.value().getTransactionId())
+            .setTransactionId(transactionRecord.value().getTransactionId())
             .setFraudResultId(UUID.randomUUID())
             .build();
 
     // If an amount ends in .99, we'll use that to act as if something is fraud
-    if (record.value().getAmount() % 1 == 0.99) {
+    if (transactionRecord.value().getAmount() % 1 == 0.99) {
       LOGGER.info(
           "Fraud detected for transaction ID: {} with amount: {}",
-          record.key(), record.value().getAmount());
+          transactionRecord.key(), transactionRecord.value().getAmount());
       fraudResult.setFraudDetected(true);
     }
 

@@ -1,0 +1,22 @@
+spring:
+  # Docker - Try to run in tests
+  # Doesn't seem to work though!
+  docker:
+    compose:
+      skip:
+        in-tests: false
+
+  # Kafka
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      properties:
+        schema.registry.url: http://localhost:8085
+    consumer:
+      properties:
+        schema.registry.url: http://localhost:8085
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafka_testbed
+    username: your_db_user
+    password: your_db_password

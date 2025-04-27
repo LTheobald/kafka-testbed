@@ -1,4 +1,4 @@
-package uk.co.ltheobald.kafkatestbed.services;
+package uk.co.ltheobald.kafkatestbed.listeners;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,6 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import uk.co.ltheobald.kafkatestbed.FraudResult;
 import uk.co.ltheobald.kafkatestbed.Transaction;
+import uk.co.ltheobald.kafkatestbed.services.FraudService;
 
 @Component
 public class Fraud {
@@ -19,30 +20,17 @@ public class Fraud {
 
   public static final String TOPIC = "fraud";
   private KafkaTemplate<String, Object> kafkaTemplate;
+  private FraudService fraudService;
 
   @Autowired
-  public Fraud(KafkaTemplate<String, Object> kafkaTemplate) {
+  public Fraud(KafkaTemplate<String, Object> kafkaTemplate, FraudService fraudService) {
     this.kafkaTemplate = kafkaTemplate;
+    this.fraudService = fraudService;
   }
 
   @KafkaListener(topics = "authorisations", groupId = "fraud-auth-listeners")
   public void listen(ConsumerRecord<String, Transaction> transactionRecord) {
-    FraudResult fraudResult =
-        FraudResult.newBuilder()
-            .setTimestamp(Instant.now())
-            .setFraudDetected(false)
-            .setTransactionId(transactionRecord.value().getTransactionId())
-            .setFraudResultId(UUID.randomUUID())
-            .build();
-
-    // If an amount ends in .99, we'll use that to act as if something is fraud
-    if (transactionRecord.value().getAmount() % 1 == 0.99) {
-      LOGGER.info(
-          "Fraud detected for transaction ID: {} with amount: {}",
-          transactionRecord.key(), transactionRecord.value().getAmount());
-      fraudResult.setFraudDetected(true);
-    }
-
+    FraudResult fraudResult = fraudService.checkTransactionForFraud(transactionRecord.value());
     kafkaTemplate.send(TOPIC, fraudResult.getFraudResultId().toString(), fraudResult);
   }
 }

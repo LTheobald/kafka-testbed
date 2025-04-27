@@ -37,5 +37,17 @@ services:
     networks:
       - kafka_net
 
+  postgres:
+    image: postgres:latest
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: read_only_user
+      POSTGRES_PASSWORD: read_only_password
+      POSTGRES_DB: kafka-testbed
+    networks:
+      - kafka_net
+
 networks:
   kafka_net:

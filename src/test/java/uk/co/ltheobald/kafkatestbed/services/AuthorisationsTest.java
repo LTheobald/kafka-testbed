@@ -1,7 +1,6 @@
 package uk.co.ltheobald.kafkatestbed.services;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -9,6 +8,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.co.ltheobald.kafkatestbed.FraudResult;
 import uk.co.ltheobald.kafkatestbed.KafkaSchemaRegistryTestBase;
 import uk.co.ltheobald.kafkatestbed.Transaction;
+import uk.co.ltheobald.kafkatestbed.listeners.Authorisations;
 
 import java.lang.reflect.Field;
 import java.time.Instant;

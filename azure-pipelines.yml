@@ -28,7 +28,7 @@ stages:
               restoreKeys: 'maven | "$(Agent.OS)"'
               path: $(mavenCacheFolder)
 
-          - task: Maven@3
+          - task: Maven@4
             displayName: 'Build & Unit Test'
             inputs:
               mavenPomFile: 'pom.xml'
@@ -50,7 +50,7 @@ stages:
               organization: '$(sonarqubeOrg)'
               scannerMode: 'Other'
 
-          - task: Maven@3
+          - task: Maven@4
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'verify'
@@ -72,7 +72,7 @@ stages:
     jobs:
       - job: Docker
         steps:
-          - task: Maven@3
+          - task: Maven@4
             displayName: 'Build OCI Image with Buildpacks'
             inputs:
               mavenPomFile: 'pom.xml'

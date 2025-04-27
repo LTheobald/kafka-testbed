@@ -44,8 +44,8 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: read_only_user
-      POSTGRES_PASSWORD: read_only_password
-      POSTGRES_DB: kafka-testbed
+      POSTGRES_PASSWORD: Read_0nly_password
+      POSTGRES_DB: kafka_testbed
     networks:
       - kafka_net
 

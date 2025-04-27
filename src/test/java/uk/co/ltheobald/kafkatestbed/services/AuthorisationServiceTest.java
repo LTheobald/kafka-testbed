@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -93,7 +95,7 @@ class AuthorisationServiceTest {
                     .build();
 
     when(transactionRepository.findById(transactionId))
-            .thenReturn(null);
+            .thenThrow(EntityNotFoundException.class);
 
     AuthorisationOutcome outcome = authorisationService.processFraudResult(declinedFraudResult);
 

@@ -1,4 +1,8 @@
 spring:
+  # Keeping dev active by default
+  profiles:
+    active: dev
+
   # Kafka
   kafka:
     producer:

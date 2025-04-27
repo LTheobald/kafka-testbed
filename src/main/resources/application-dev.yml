@@ -1,11 +1,4 @@
 spring:
-  # Docker - Try to run in tests
-  # Doesn't seem to work though!
-  docker:
-    compose:
-      skip:
-        in-tests: false
-
   # Kafka
   kafka:
     bootstrap-servers: localhost:29092
@@ -18,5 +11,5 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/kafka_testbed
-    username: your_db_user
-    password: your_db_password
+    username: read_only_user
+    password: Read_0nly_password

@@ -1,11 +1,4 @@
 spring:
-  # Docker - Try to run in tests
-  # Doesn't seem to work though!
-  docker:
-    compose:
-      skip:
-        in-tests: false
-
   # Kafka
   kafka:
     bootstrap-servers: localhost:29092

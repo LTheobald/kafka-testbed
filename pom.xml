@@ -54,6 +54,11 @@
             <artifactId>flyway-core</artifactId>
             <version>10.20.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>10.20.0</version>
+        </dependency>
 
         <!-- Pulumi -->
         <dependency>
@@ -85,14 +90,6 @@
             <artifactId>spring-boot-docker-compose</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-
-        <!-- Lombok to save me a few lines of code! -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version> <!-- Latest stable as of 2024 -->
-            <scope>provided</scope>
         </dependency>
 
         <!-- Spring Testing -->

@@ -15,9 +15,18 @@ variables:
   sonarqubeProjectName: 'Kafka Testbed'
 
 stages:
+  # Stage 0: Prepare
+  - stage: Prepare
+    displayName: 'Prepare Agent'
+    jobs:
+      - job: Prepare
+        steps:
+        - task: DockerInstaller@0
+  
   # Stage 1: Build & test
   - stage: BuildTest
     displayName: 'Build and Unit Test'
+    dependsOn: Prepare
     jobs:
       - job: Build
         steps:

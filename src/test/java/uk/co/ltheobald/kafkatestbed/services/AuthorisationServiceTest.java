@@ -84,10 +84,6 @@ class AuthorisationServiceTest {
   @Test
   void processNotFoundFraudResult() {
     UUID transactionId = randomUUID();
-    TransactionEntity declinedTransaction =
-            new TransactionEntity(
-                    transactionId, from(now()), "merchant-1", 1.99, "GBP", "Test transaction");
-
     FraudResult declinedFraudResult =
             FraudResult.newBuilder()
                     .setTimestamp(now())

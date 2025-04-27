@@ -21,6 +21,6 @@ public class KafkaSchemaRegistryTestBase {
 
     @AfterAll
     static void tearDown() {
-        environment.stop();
+        //environment.stop();
     }
 }

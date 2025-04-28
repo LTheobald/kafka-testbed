@@ -21,7 +21,7 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
       new DockerComposeContainer<>(new File("docker-compose.yaml"))
               .withExposedService("postgres", 5432, Wait.forListeningPort())
           .withExposedService("kafka", 29092, Wait.forListeningPort())
-          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2))
+          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)))
           .withStartupTimeout(Duration.ofMinutes(3));
 
   @BeforeAll

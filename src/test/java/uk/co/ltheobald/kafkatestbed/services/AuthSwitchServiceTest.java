@@ -6,11 +6,10 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import uk.co.ltheobald.kafkatestbed.KafkaSchemaRegistryTestBase;
 import uk.co.ltheobald.kafkatestbed.Transaction;
 
 @SpringBootTest
-class AuthSwitchServiceTest extends KafkaSchemaRegistryTestBase {
+class AuthSwitchServiceTest {
 
   @Autowired private AuthSwitchService authSwitchService;
 

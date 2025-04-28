@@ -1,4 +1,9 @@
 spring:
+  # Disabling Docker compose by default.
+  docker:
+    compose:
+      enabled: false
+
   # Keeping dev active by default
   profiles:
     active: dev

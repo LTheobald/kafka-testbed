@@ -1,4 +1,9 @@
 spring:
+  # Docker compose to aid with integration testing
+  docker:
+    compose:
+      enabled: true
+
   # Kafka
   kafka:
     bootstrap-servers: localhost:29092

@@ -41,7 +41,7 @@ stages:
             displayName: 'Build & Unit Test'
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'clean install'
+              goals: 'clean test'
               options: '-Dmaven.repo.local=$(mavenCacheFolder)'
               publishJUnitResults: true
 

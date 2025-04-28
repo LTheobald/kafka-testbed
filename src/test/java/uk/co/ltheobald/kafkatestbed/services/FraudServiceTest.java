@@ -5,15 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.co.ltheobald.kafkatestbed.FraudResult;
-import uk.co.ltheobald.kafkatestbed.KafkaSchemaRegistryTestBase;
 import uk.co.ltheobald.kafkatestbed.Transaction;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class FraudServiceTest extends KafkaSchemaRegistryTestBase {
+class FraudServiceTest {
 
   @Autowired
   private FraudService fraudService;

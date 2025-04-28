@@ -6,20 +6,20 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
-
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.co.ltheobald.kafkatestbed.FraudResult;
 import uk.co.ltheobald.kafkatestbed.Transaction;
 import uk.co.ltheobald.kafkatestbed.entities.TransactionEntity;
 import uk.co.ltheobald.kafkatestbed.repositories.TransactionRepository;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class AuthorisationServiceTest {
 
   @InjectMocks private AuthorisationService authorisationService;

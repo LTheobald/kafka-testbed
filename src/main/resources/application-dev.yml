@@ -1,3 +1,7 @@
+logging:
+  level:
+    org.springframework.boot.docker.compose: DEBUG
+
 spring:
   # Kafka
   kafka:

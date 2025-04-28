@@ -11,17 +11,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-//@Testcontainers
+@Testcontainers
 public class KafkaSchemaRegistryComposeIntegrationTest {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(KafkaSchemaRegistryComposeIntegrationTest.class);
 
   static final DockerComposeContainer<?> environment =
       new DockerComposeContainer<>(new File("docker-compose.yaml"))
-              .withExposedService("postgres", 5432, Wait.forListeningPort())
+          .withExposedService("postgres", 5432, Wait.forListeningPort())
           .withExposedService("kafka", 29092, Wait.forListeningPort())
-          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2)))
+          .withExposedService(
+              "schema-registry",
+              8085,
+              Wait.forHttp("/subjects")
+                  .forStatusCode(200)
+                  .withStartupTimeout(Duration.ofMinutes(2)))
           .withStartupTimeout(Duration.ofMinutes(3));
 
   @BeforeAll
@@ -29,11 +35,11 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
     environment.start();
   }
 
-
   @AfterAll
   static void tearDown() {
-    // Removing for now. The integration test is running early so the below line causes spring issues
-        // environment.stop();
+    // Removing for now. The integration test is running early so the below line causes spring
+    // issues
+    // environment.stop();
   }
 
   @Test

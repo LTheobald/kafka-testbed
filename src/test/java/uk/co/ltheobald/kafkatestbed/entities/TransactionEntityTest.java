@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import uk.co.ltheobald.kafkatestbed.Transaction;
 
-@SpringBootTest
 public class TransactionEntityTest {
 
     /**

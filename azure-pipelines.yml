@@ -77,7 +77,7 @@ stages:
     displayName: Integration Tests
     dependsOn: BuildTest
     jobs:
-      - job: Integration Test
+      - job: IntegrationTest
         steps:
           - task: Cache@2
             displayName: 'Reload Maven cache'

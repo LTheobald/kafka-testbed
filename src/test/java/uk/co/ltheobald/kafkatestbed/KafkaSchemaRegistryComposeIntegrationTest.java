@@ -3,6 +3,8 @@ package uk.co.ltheobald.kafkatestbed;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,8 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
   static final DockerComposeContainer<?> environment =
       new DockerComposeContainer<>(new File("docker-compose.yaml"))
           .withExposedService("kafka", 29092, Wait.forListeningPort())
-          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200));
+          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200))
+          .withStartupTimeout(Duration.ofMinutes(3));
 
   @BeforeAll
   static void setUp() {

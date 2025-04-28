@@ -15,14 +15,6 @@ variables:
   sonarqubeProjectName: 'Kafka Testbed'
 
 stages:
-  # Stage 0: Prepare
-  - stage: Prepare
-    displayName: 'Prepare Agent'
-    jobs:
-      - job: Prepare
-        steps:
-        - task: DockerInstaller@0
-  
   # Stage 1: Build & test
   - stage: BuildTest
     displayName: 'Build and Unit Test'
@@ -30,6 +22,13 @@ stages:
     jobs:
       - job: Build
         steps:
+          - task: DockerInstaller@0
+            displayName: Ensure Docker is installed
+          - script: |
+              docker pull postgres:latest
+              docker pull confluentinc/cp-kafka:latest
+              docker pull confluentinc/cp-schema-registry:7.9.0
+            displayName: 'Pull required Docker images'
           - task: Cache@2
             displayName: 'Cache Maven dependencies'
             inputs:

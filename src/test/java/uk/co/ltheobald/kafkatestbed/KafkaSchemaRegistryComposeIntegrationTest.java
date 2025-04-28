@@ -8,12 +8,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
+//@Testcontainers
 public class KafkaSchemaRegistryComposeIntegrationTest {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(KafkaSchemaRegistryComposeIntegrationTest.class);
@@ -21,8 +19,7 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
   static final DockerComposeContainer<?> environment =
       new DockerComposeContainer<>(new File("docker-compose.yaml"))
           .withExposedService("kafka", 29092, Wait.forListeningPort())
-          .withExposedService(
-              "schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200));
+          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200));
 
   @BeforeAll
   static void setUp() {

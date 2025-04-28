@@ -126,6 +126,7 @@
             <scope>test</scope>
         </dependency>
 
+
         <!-- H2 for in memory DB testing -->
         <dependency>
             <groupId>com.h2database</groupId>

@@ -1,8 +1,4 @@
 spring:
-  docker:
-    compose:
-      enabled: true
-
   # Keeping dev active by default
   profiles:
     active: dev

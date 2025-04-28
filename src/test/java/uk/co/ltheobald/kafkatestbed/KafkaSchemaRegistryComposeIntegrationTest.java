@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.time.Duration;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,16 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
 
   static final DockerComposeContainer<?> environment =
       new DockerComposeContainer<>(new File("docker-compose.yaml"))
+              .withExposedService("postgres", 5432, Wait.forListeningPort())
           .withExposedService("kafka", 29092, Wait.forListeningPort())
-          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200))
+          .withExposedService("schema-registry", 8085, Wait.forHttp("/subjects").forStatusCode(200).withStartupTimeout(Duration.ofMinutes(2))
           .withStartupTimeout(Duration.ofMinutes(3));
 
   @BeforeAll
   static void setUp() {
     environment.start();
   }
+
 
   @AfterAll
   static void tearDown() {

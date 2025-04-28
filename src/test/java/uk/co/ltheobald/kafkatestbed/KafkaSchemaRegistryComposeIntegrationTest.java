@@ -13,7 +13,6 @@ import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@ActiveProfiles("integration")
 @Testcontainers
 public class KafkaSchemaRegistryComposeIntegrationTest {
   private static final Logger LOGGER =
@@ -32,7 +31,8 @@ public class KafkaSchemaRegistryComposeIntegrationTest {
 
   @AfterAll
   static void tearDown() {
-    environment.stop();
+    // Removing for now. The integration test is running early so the below line causes spring issues
+        // environment.stop();
   }
 
   @Test

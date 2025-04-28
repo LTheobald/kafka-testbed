@@ -10,11 +10,9 @@ import uk.co.ltheobald.kafkatestbed.Transaction;
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
 
-@SpringBootTest
 class FraudServiceTest {
 
-  @Autowired
-  private FraudService fraudService;
+  private FraudService fraudService = new FraudService();
 
   /**
    * Create two transactions, one which we know will flag as fraud and test them

@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.co.ltheobald.kafkatestbed.Transaction;
 
-@SpringBootTest
 class AuthSwitchServiceTest {
 
-  @Autowired private AuthSwitchService authSwitchService;
+  private AuthSwitchService authSwitchService = new AuthSwitchService();
 
   /** Create a number of transactions & ensure none of them are identical */
   @Test

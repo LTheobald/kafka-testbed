@@ -18,7 +18,6 @@ stages:
   # Stage 1: Build & test
   - stage: BuildTest
     displayName: 'Build and Unit Test'
-    dependsOn: Prepare
     jobs:
       - job: Build
         steps:

@@ -75,7 +75,7 @@ stages:
 
   - stage: IntegrationTests
     displayName: Integration Tests
-    dependsOn: BuiltTest
+    dependsOn: BuildTest
     jobs:
       - job: Integration Test
         steps:

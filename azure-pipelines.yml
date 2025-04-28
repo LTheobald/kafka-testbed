@@ -45,6 +45,12 @@ stages:
     jobs:
       - job: SonarQubeAnalysis
         steps:
+          - task: Cache@2
+            displayName: 'Reload Maven cache'
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: 'maven | "$(Agent.OS)"'
+              path: $(mavenCacheFolder)
           - task: SonarCloudPrepare@3
             displayName: 'SonarQube: Prepare'
             inputs:
@@ -67,6 +73,27 @@ stages:
             inputs:
               pollingTimeoutSec: 300
 
+  - stage: IntegrationTests
+    displayName: Integration Tests
+    dependsOn: BuiltTest
+    jobs:
+      - job: Integration Test
+        steps:
+          - task: Cache@2
+            displayName: 'Reload Maven cache'
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: 'maven | "$(Agent.OS)"'
+              path: $(mavenCacheFolder)
+          - task: Maven@4
+            displayName: 'Integration Tests'
+            continueOnError: true # Expecting this one to fail!
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'integration-test'
+              options: >
+                -Dmaven.repo.local=$(mavenCacheFolder)
+
   # Stage 3: Docker Build & Scan
   - stage: Containerize
     displayName: 'Container Build and Scan'
@@ -74,6 +101,12 @@ stages:
     jobs:
       - job: Docker
         steps:
+          - task: Cache@2
+            displayName: 'Reload Maven cache'
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: 'maven | "$(Agent.OS)"'
+              path: $(mavenCacheFolder)
           - task: Maven@4
             displayName: 'Build OCI Image with Buildpacks'
             inputs:
@@ -87,7 +120,6 @@ stages:
             inputs:
               imageName: "$(dockerImageName):$(Build.BuildId)"
             displayName: 'Scan image for Vulnerabilities'
-            condition: succeededOrFailed()
 
   # Stage 4: Push to Container Registry
 #  - stage: PushImage

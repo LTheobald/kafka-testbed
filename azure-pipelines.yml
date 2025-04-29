@@ -56,7 +56,9 @@ stages:
             inputs:
               SonarQube: '$(sonarqubeService)'
               organization: '$(sonarqubeOrg)'
-              scannerMode: 'Other'
+              scannerMode: 'other'
+              extraProperties: |
+                sonar.branch.name=main
 
           - task: Maven@4
             inputs:

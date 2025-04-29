@@ -120,3 +120,12 @@ stages:
             inputs:
               image: "$(dockerImageName):$(Build.BuildId)"
             displayName: 'Scan image for Vulnerabilities'
+          
+          - task: ECRPushImage@1
+            inputs:
+              awsCredentials: 'AWS Personal'
+              regionName: 'eu-west-1'
+              imageSource: 'imagename'
+              sourceImageName: "$(dockerImageName):$(Build.BuildId)"
+              repositoryName: 'kafka-testbed'
+              removeDockerImage: true

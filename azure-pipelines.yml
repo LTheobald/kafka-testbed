@@ -118,23 +118,5 @@ stages:
 
           - task: Trivy@1
             inputs:
-              imageName: "$(dockerImageName):$(Build.BuildId)"
+              image: "$(dockerImageName):$(Build.BuildId)"
             displayName: 'Scan image for Vulnerabilities'
-
-  # Stage 4: Push to Container Registry
-#  - stage: PushImage
-#    displayName: 'Push Docker Image to ACR'
-#    dependsOn: Containerize
-#    condition: succeeded()
-#    jobs:
-#      - job: Push
-#        steps:
-#          - task: Docker@2
-#            displayName: 'Push Docker Image'
-#            inputs:
-#              containerRegistry: '$(ACR_NAME)'
-#              repository: '$(DOCKER_IMAGE_NAME)'
-#              command: 'push'
-#              tags: |
-#                $(Build.BuildId)
-#                latest

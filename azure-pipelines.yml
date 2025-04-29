@@ -61,7 +61,7 @@ stages:
           - task: Maven@4
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'verify'
+              goals: 'verify sonar:sonar'
               options: >
                 -DnvdApiKey=$(nvdAPIKey)
                 -Dsonar.projectKey=$(sonarqubeProjectKey)

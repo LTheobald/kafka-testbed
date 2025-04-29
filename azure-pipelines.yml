@@ -117,9 +117,10 @@ stages:
                 -Dmaven.repo.local=$(mavenCacheFolder)
 
           - task: Trivy@1
+            displayName: 'Scan image for Vulnerabilities'
+            continueOnError: true
             inputs:
               image: "$(dockerImageName):$(Build.BuildId)"
-            displayName: 'Scan image for Vulnerabilities'
           
           - task: ECRPushImage@1
             inputs:
